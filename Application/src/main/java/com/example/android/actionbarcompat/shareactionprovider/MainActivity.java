@@ -22,6 +22,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import com.example.android.actionbarcompat.shareactionprovider.content.ContentIt
 
 import java.util.ArrayList;
 
+
 /**
  * This sample shows you how a provide a {@link ShareActionProvider} with ActionBarCompat,
  * backwards compatible to API v7.
@@ -46,13 +48,14 @@ import java.util.ArrayList;
  * This Activity extends from {@link ActionBarActivity}, which provides all of the function
  * necessary to display a compatible Action Bar on devices running Android v2.1+.
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     // The items to be displayed in the ViewPager
     private final ArrayList<ContentItem> mItems = getSampleContent();
 
     // Keep reference to the ShareActionProvider from the menu
     private ShareActionProvider mShareActionProvider;
+    private ViewPager vp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +65,25 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.sample_main);
 
         // Retrieve the ViewPager from the content view
-        ViewPager vp = (ViewPager) findViewById(R.id.viewpager);
+        vp = (ViewPager) findViewById(R.id.viewpager);
 
         // Set an OnPageChangeListener so we are notified when a new item is selected
-        vp.setOnPageChangeListener(mOnPageChangeListener);
 
         // Finally set the adapter so the ViewPager can display items
         vp.setAdapter(mPagerAdapter);
+    }
+
+
+    @Override
+    protected void onPause() {
+        vp.removeOnPageChangeListener(mOnPageChangeListener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        vp.addOnPageChangeListener(mOnPageChangeListener);
+        super.onResume();
     }
 
     // BEGIN_INCLUDE(get_sap)
